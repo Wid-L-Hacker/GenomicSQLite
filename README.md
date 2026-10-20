@@ -22,7 +22,7 @@ Our **[Colab notebook](https://colab.research.google.com/drive/1OlHPOcRQBhDmEnS1
 
 **Start Here 👉 [full documentation site](https://mlin.github.io/GenomicSQLite/)**
 
-We supply the extension [prepackaged](https://github.com/mlin/GenomicSQLite/releases) for Linux and macOS on x86-64. An up-to-date version of SQLite itself is also required, as specified in the docs.
+We supply the extension [prepackaged](https://github.com/mlin/GenomicSQLite/releases) for Linux x86-64 and macOS Apple Silicon (macOS 15+). An up-to-date version of SQLite itself is also required, as specified in the docs.
 
 Programming language support:
 
@@ -54,7 +54,7 @@ cmake --build build -j 4 --target genomicsqlite
 
 * htslib &ge; 1.9, samtools, and tabix
 * pigz
-* Python &ge; 3.6 and packages: pytest pytest-xdist pre-commit black pylint flake8 
+* Python &ge; 3.6 and packages: pytest pytest-xdist pre-commit ruff
 * JDK, mvn, rust
 * clang-format & cppcheck
 

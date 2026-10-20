@@ -1,9 +1,9 @@
 import os
 import sqlite3
 import subprocess
+
 import genomicsqlite
 import pytest
-
 
 HERE = os.path.dirname(__file__)
 BUILD = os.path.abspath(os.path.join(HERE, "..", "build"))

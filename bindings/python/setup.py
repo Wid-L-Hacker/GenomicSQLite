@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from os import path
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup  # pylint: disable=import-error
 from version import get_version
 
 HERE = path.abspath(path.dirname(__file__))
@@ -20,7 +21,7 @@ setup(
     license="Apache",
     packages=find_packages(),
     package_data={
-        "": ["genomicsqlite/libgenomicsqlite.so", "genomicsqlite/libgenomicsqlite.dylib"]
+        "": ["genomicsqlite/libgenomicsqlite-*.so", "genomicsqlite/libgenomicsqlite-*.dylib"]
     },
     include_package_data=True,
     entry_points={"console_scripts": ["genomicsqlite = genomicsqlite:_cli"]},
