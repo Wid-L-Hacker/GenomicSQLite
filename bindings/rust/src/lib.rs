@@ -338,8 +338,9 @@ impl ConnectionMethods for Connection {
     ) -> Result<String> {
         query1str(
             self,
-            "SELECT put_genomic_reference_sequence_sql(?,?,?,?,?,?)",
+            "SELECT put_genomic_reference_sequence_sql(?,?,?,?,?,?,?)",
             params![
+                refseq.name,
                 refseq.length,
                 refseq.assembly,
                 refseq.refget_id,
@@ -565,6 +566,46 @@ mod tests {
             .unwrap();
         assert_eq!(filtered.len(), 1);
         assert_eq!(filtered.get("chr3").unwrap().length, 424242);
+    }
+
+    #[test]
+    fn put_reference_sequence_sql_test() {
+        let dbfn = format!(
+            "/tmp/genomicsqlite_rust_refseq_test.{}.db",
+            uuid::Uuid::new_v4()
+        );
+        let config = json::object::Object::new();
+        let conn = super::open(
+            dbfn,
+            OpenFlags::SQLITE_OPEN_CREATE | OpenFlags::SQLITE_OPEN_READ_WRITE,
+            &config,
+        )
+        .unwrap();
+
+        // The programming guide's example: register chr17, letting the
+        // database assign the rid.
+        let chr17 = super::RefSeq {
+            rid: -1,
+            name: "chr17".to_string(),
+            length: 83257441,
+            assembly: None,
+            refget_id: None,
+            meta_json: json::object::Object::new(),
+        };
+        let ref_sql = conn.put_reference_sequence_sql(&chr17).unwrap();
+        conn.execute_batch(&ref_sql).unwrap();
+
+        let by_name = conn.get_reference_sequences_by_name().unwrap();
+        let stored = by_name.get("chr17").unwrap();
+        assert_eq!(stored.length, 83257441);
+        assert_eq!(stored.assembly, None);
+        assert_eq!(stored.refget_id, None);
+
+        // the assigned rid keys the same entry in the by-rid view
+        let by_rid = conn.get_reference_sequences_by_rid().unwrap();
+        assert_eq!(by_rid.len(), 1);
+        assert_eq!(by_rid.get(&stored.rid).unwrap().name, "chr17");
+        assert_eq!(by_rid.get(&stored.rid).unwrap().length, 83257441);
     }
 
     #[test]
